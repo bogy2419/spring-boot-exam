@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bogy.exam.dao.AuxiliaryMapper">
+	
+	<select id="getTableData" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		select * from ${tableName}
+	</select>
+	<select id="getTableDataBySql" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		${sqlText}
+	</select>
+	<select id="getColumnList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		select column_name title from user_tab_columns where table_name=#{tableName}
+	</select>
+	
+	<insert id="addInportData"  parameterType="java.util.HashMap">  
+	    insert into ${tableName} 
+	    (
+	    	id,
+	    	${columnNames}
+	    ) 
+	    values
+	    (
+	    	seq_boundary_info.nextval,
+	    	${param}
+	    )
+	</insert> 
+	
+	<select id="getAreaData" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+	  select * from (
+      SELECT tm.*,SUBSTR(SYS_CONNECT_BY_PATH(name,'->'),3)  NAME_PATH
+      FROM t_area tm
+           START   WITH tm.id=100000
+           CONNECT BY PRIOR ID=PARENT_ID
+           )  
+             order by id
+	</select>
+</mapper>

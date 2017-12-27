@@ -1,0 +1,25 @@
+server:
+  port: 8083
+  context-path: /exam
+  
+spring:
+  datasource:
+    jy:
+      type: com.alibaba.druid.pool.DruidDataSource
+      url: jdbc:oracle:thin:@192.168.0.34:1521:ORCL
+      username: jysys
+      password: 123456
+      driver-class-name: oracle.jdbc.driver.OracleDriver
+      minIdle: 1
+      maxActive: 2
+      initialSize: 1
+      timeBetweenEvictionRunsMillis: 3000
+      minEvictableIdleTimeMillis: 300000
+      validationQuery: SELECT 'ZTM' FROM DUAL
+      testWhileIdle: true
+      testOnBorrow: false
+      testOnReturn: false
+
+logging.level.org.springframework.web : DEBUG
+spring.mvc.view.prefix: /WEB-INF/jsp/
+spring.mvc.view.suffix: .jsp

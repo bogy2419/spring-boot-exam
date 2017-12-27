@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bogy.exam.dao.BogyMapper">
+	
+	<select id="getServiceLitenData" resultType="java.util.HashMap">
+		select tsl.service_name,lh1.avg_time,lh1.max_time,lh2.last_once_use_time,lh2.last_once_result,tsl.Use_Count from (
+	      select sid,round(avg(use_time)) avg_time,max(use_time) max_time from t_service_listion_history  group by sid
+	      ) lh1
+	      join
+	      (
+	      select s1.sid,s1.use_time last_once_use_time,s1.s_result last_once_result from t_service_listion_history s1
+	      join (select sid,max(id) id from t_service_listion_history   group by sid ) s2 on s2.id=s1.id
+	      ) lh2
+	      on
+	      lh1.sid=lh2.sid
+	      join
+	      t_service_listion tsl
+	      on tsl.id=lh1.sid
+	      where tsl.is_del = 0
+	    order by tsl.use_count desc
+	</select>
+	
+	<select id="serviceLitenList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		select  
+		id,
+		service_name,
+		service_param,
+		remark,
+		service_enable,
+		to_char(create_time,'yyyy-mm-dd hh24:mi:ss') create_time,
+		to_char(last_update_time,'yyyy-mm-dd hh24:mi:ss') last_update_time,
+		use_count,
+		response_key
+		from t_service_listion where is_del = 0
+		<if test="sName !=null and sName !=''">
+			and service_name=#{sName}
+		</if>
+		order by use_count desc
+	</select>
+	
+	
+</mapper>
